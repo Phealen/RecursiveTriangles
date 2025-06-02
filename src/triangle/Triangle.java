@@ -38,6 +38,16 @@ public class Triangle implements ResizableImage {
         border = 8;
         gBuffer.drawRect(border, border, size.width - 2 * border, size.height - 2 * border);
         gBuffer.drawString("Triangle goes here", border * 2, border * 4);
+        int x[]={size.width/2,(size.width/2)+30,(size.width/2)-30};
+        int y[]={50,100,100};
+        gBuffer.drawPolygon(x,y , 3);
+
+        //loop to create multiple triangles
+        for (int i = 0; i < 10;i++){
+            int x2[]={(size.width/2)+(i*30),(size.width/2)+(i*30),(size.width/2)-(i*30)};
+            int y2[]={50+(i*100),100+(i*50),100+(i*50)};
+            gBuffer.drawPolygon(x2,y2,3);
+        }
         return bufferedImage;
     }
 
