@@ -4,6 +4,7 @@ import resizable.ResizableImage;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 import static resizable.Debug.print;
 
@@ -38,6 +39,34 @@ public class Triangle implements ResizableImage {
         border = 8;
         gBuffer.drawRect(border, border, size.width - 2 * border, size.height - 2 * border);
         gBuffer.drawString("Triangle goes here", border * 2, border * 4);
+
+        // base triangle
+        Polygon triangle = new Polygon();
+
+        // middlepoint
+        int x0 = size.width / 2;
+        int y0 = size.height - border - 20;
+
+        int length = size.width - (border * 2 + 20);
+        double height = Math.sqrt(3) / 2 * length;
+
+        triangle.addPoint(x0, (int) (y0 - height));
+        triangle.addPoint(x0 - length / 2, y0);
+        triangle.addPoint(x0 + length / 2, y0);
+
+        Random rand = new Random();
+        float red = rand.nextFloat();
+        float green = rand.nextFloat();
+        float blue = rand.nextFloat();
+        Color randomColor = new Color(red, green, blue);
+
+        gBuffer.setColor(randomColor);
+        gBuffer.fillPolygon(triangle);
+        drawTriangleRecursive(gBuffer, 8, triangle);
+
+        return bufferedImage;
+    }
+        /* OLD VERSION
         //Triangle drawing
         int xa = (size.width/2);
         int xb = (size.width/2+30);
@@ -56,6 +85,59 @@ public class Triangle implements ResizableImage {
             gBuffer.drawPolygon(x2,y2,3);
         }
         return bufferedImage;
+    }*/
+    private void drawTriangleRecursive(Graphics2D gBuffer, int depth, Polygon triangle) {
+        Random rand = new Random();
+        float red = rand.nextFloat();
+        float green = rand.nextFloat();
+        float blue = rand.nextFloat();
+        Color randomColor = new Color(red, green, blue);
+
+        if (depth == 0) {
+            gBuffer.setColor(randomColor);
+            gBuffer.fillPolygon(triangle);
+        } else {
+            int x1 = (triangle.xpoints[0] + triangle.xpoints[1]) / 2;
+            int y1 = (triangle.ypoints[0] + triangle.ypoints[1]) / 2;
+
+            int x2 = (triangle.xpoints[1] + triangle.xpoints[2]) / 2;
+            int y2 = (triangle.ypoints[1] + triangle.ypoints[2]) / 2;
+
+            int x3 = (triangle.xpoints[2] + triangle.xpoints[0]) / 2;
+            int y3 = (triangle.ypoints[2] + triangle.ypoints[0]) / 2;
+
+            Polygon triangle1 = new Polygon();
+            Polygon triangle2 = new Polygon();
+            Polygon triangle3 = new Polygon();
+            Polygon triangle4 = new Polygon();
+
+            triangle1.addPoint(triangle.xpoints[0], triangle.ypoints[0]);
+            triangle1.addPoint(x1, y1);
+            triangle1.addPoint(x3, y3);
+
+            triangle2.addPoint(triangle.xpoints[1], triangle.ypoints[1]);
+            triangle2.addPoint(x2, y2);
+            triangle2.addPoint(x1, y1);
+
+            triangle3.addPoint(triangle.xpoints[2], triangle.ypoints[2]);
+            triangle3.addPoint(x3, y3);
+            triangle3.addPoint(x2, y2);
+
+            triangle4.addPoint(x1, y1);
+            triangle4.addPoint(x2, y2);
+            triangle4.addPoint(x3, y3);
+
+            red = rand.nextFloat();
+            green = rand.nextFloat();
+            blue = rand.nextFloat();
+            randomColor = new Color(red, green, blue);
+            gBuffer.setColor(randomColor);
+            gBuffer.fillPolygon(triangle4);
+
+            drawTriangleRecursive(gBuffer, depth - 1, triangle1);
+            drawTriangleRecursive(gBuffer, depth - 1, triangle2);
+            drawTriangleRecursive(gBuffer, depth - 1, triangle3);
+        }
     }
 
     BufferedImage bufferedImage;
