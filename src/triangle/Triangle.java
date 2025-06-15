@@ -21,6 +21,7 @@ import static resizable.Debug.print;
  * preview.
  *
  */
+
 public class Triangle implements ResizableImage {
     int drawTriangle = 0;
     /**
